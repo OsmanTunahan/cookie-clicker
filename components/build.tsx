@@ -10,6 +10,7 @@ interface BuildProps {
   setCount: (count: number) => void;
   cookiesPerSecond: number;
   setCookiesPerSecond: (cps: number) => void;
+  buyBuilding: () => void;
 }
 
 const getBuildImage = async (buildName: string) => {
@@ -17,7 +18,7 @@ const getBuildImage = async (buildName: string) => {
   return image.default;
 }
 
-const Build: React.FC<BuildProps> = ({ name, cost, cps, count, quantity, setCount, cookiesPerSecond, setCookiesPerSecond }) => {
+const Build: React.FC<BuildProps> = ({ name, cost, cps, count, quantity, setCount, cookiesPerSecond, setCookiesPerSecond, buyBuilding }) => {
   const [imageSrc, setImageSrc] = React.useState<string | null>(null);
 
   React.useEffect(() => {
@@ -27,13 +28,6 @@ const Build: React.FC<BuildProps> = ({ name, cost, cps, count, quantity, setCoun
     };
     loadImage();
   }, [name]);
-
-  const buyBuilding = () => {
-    if (count >= cost) {
-      setCount(count - cost);
-      setCookiesPerSecond(cookiesPerSecond + cps);
-    }
-  };
 
   return (
     <div className="flex items-center justify-between mb-2 border-b-2 border-gray-200 w-full p-2">
