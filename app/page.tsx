@@ -1,7 +1,9 @@
+import CookieCounter from '@/components/counter';
+
 export default function Home() {
   return (
-    <>
-      <p>Cookie Clicker</p>
-    </>
+    <div>
+      <CookieCounter />
+    </div>
   );
 }
