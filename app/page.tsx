@@ -37,9 +37,8 @@ export default function Home() {
     if (count >= building.cost) {
       const newCount = count - building.cost;
       const newBuildings = [...buildings];
+ 
       newBuildings[index].quantity += 1;
-
-      // Bina satın alma sonrası fiyat artışı
       newBuildings[index].cost = Math.floor(newBuildings[index].cost * 1.1);
 
       if (building.name === 'Cursor' && newBuildings[index].quantity % 10 === 0) {
