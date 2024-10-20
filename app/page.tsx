@@ -83,6 +83,14 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    const saveInterval = setInterval(() => {
+      updateSession(count, cookiesPerSecond, buildings);
+    }, 10000);
+
+    return () => clearInterval(saveInterval);
+  }, [count, cookiesPerSecond, buildings]);
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       <div className="w-1/2 flex flex-col items-center justify-center border-r-2 border-gray-300">
