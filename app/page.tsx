@@ -3,66 +3,85 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Build from "@/components/build";
-
 import CookieImage from "@/assets/images/cookie.png";
 
+type Building = {
+  name: string;
+  cost: number;
+  cps: number;
+  quantity: number;
+};
+
 export default function Home() {
-  const [count, setCount] = useState(0);
-  const [cookiesPerSecond, setCookiesPerSecond] = useState(0);
-  const [buildings, setBuildings] = useState([
+  const [count, setCount] = useState<number>(0);
+  const [cookiesPerSecond, setCookiesPerSecond] = useState<number>(0);
+  const [buildings, setBuildings] = useState<Building[]>([
     { name: 'Cursor', cost: 15, cps: 1, quantity: 0 },
     { name: 'Grandma', cost: 100, cps: 5, quantity: 0 },
     { name: 'Farm', cost: 1100, cps: 15, quantity: 0 },
     { name: 'Mine', cost: 12000, cps: 47, quantity: 0 },
     { name: 'Factory', cost: 130000, cps: 260, quantity: 0 },
     { name: 'Bank', cost: 1400000, cps: 1400, quantity: 0 },
-    { name: 'Temple', cost: 20000000, cps: 7800, quantity: 0 }
+    { name: 'Temple', cost: 20000000, cps: 7800, quantity: 0 },
   ]);
+
+  useEffect(() => {
+    const loadProgress = async () => {
+      try {
+        const res = await fetch('/api/session');
+        if (res.ok) {
+          const response = await res.json();
+          setCount(response.data.count);
+          setCookiesPerSecond(response.data.cookiesPerSecond);
+          setBuildings(response.data.buildings);
+        }
+      } catch (error) {
+        console.log("No saved progress found.");
+      }
+    };
+    loadProgress();
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCount((prevCount) => prevCount + cookiesPerSecond);
     }, 1000);
-
     return () => clearInterval(interval);
   }, [cookiesPerSecond]);
 
   const handleClick = () => {
-    setCount(count + 1);
+    setCount((prevCount) => prevCount + 1);
   };
 
   const buyBuilding = (index: number) => {
-    console.log(index)
     const building = buildings[index];
     if (count >= building.cost) {
       const newCount = count - building.cost;
       const newBuildings = [...buildings];
- 
       newBuildings[index].quantity += 1;
       newBuildings[index].cost = Math.floor(newBuildings[index].cost * 1.1);
 
-      if (building.name === 'Cursor' && newBuildings[index].quantity % 10 === 0) {
-        setCount(newCount * 1.5);
-      } else if (building.name === 'Grandma' && newBuildings[index].quantity % 20 === 0) {
-        setCookiesPerSecond(cps => cps * 2);
-      } else if (building.name === 'Farm' && newBuildings[index].quantity % 5 === 0) {
-        setCookiesPerSecond(cps => cps * 1.2);
-      } else if (building.name === 'Mine' && newBuildings[index].quantity % 3 === 0) {
-        setCookiesPerSecond(cps => cps * 1.5);
-      } else if (building.name === 'Factory' && newBuildings[index].quantity % 2 === 0) {
-        setCount(newCount * 2);
-      } else if (building.name === 'Bank') {
-        setCookiesPerSecond(cps => cps * 2.5);
-      } else if (building.name === 'Temple') {
-        setCookiesPerSecond(cps => cps * 3);
-      }
-
       setCount(newCount);
       setBuildings(newBuildings);
-      setCookiesPerSecond(cps => cps + building.cps);
+      setCookiesPerSecond((cps) => cps + building.cps);
+
+      updateSession(newCount, cookiesPerSecond + building.cps, newBuildings);
     }
   };
-  
+
+  const updateSession = async (count: number, cps: number, buildings: Building[]) => {
+    try {
+      await fetch('/api/session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ count, cookiesPerSecond: cps, buildings }),
+      });
+    } catch (error) {
+      console.error("Failed to save progress:", error);
+    }
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -84,17 +103,17 @@ export default function Home() {
           <h2 className="text-2xl font-bold mb-4">Buildings</h2>
           {buildings.map((building, index) => (
             <Build
-            key={index}
-            name={building.name}
-            cost={building.cost}
-            cps={building.cps}
-            count={count}
-            quantity={building.quantity}
-            setCount={setCount}
-            cookiesPerSecond={cookiesPerSecond}
-            setCookiesPerSecond={setCookiesPerSecond}
-            buyBuilding={() => buyBuilding(index)}
-          />
+              key={index}
+              name={building.name}
+              cost={building.cost}
+              cps={building.cps}
+              count={count}
+              quantity={building.quantity}
+              setCount={setCount}
+              cookiesPerSecond={cookiesPerSecond}
+              setCookiesPerSecond={setCookiesPerSecond}
+              buyBuilding={() => buyBuilding(index)}
+            />
           ))}
         </div>
       </div>
