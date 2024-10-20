@@ -92,23 +92,23 @@ export default function Home() {
   }, [count, cookiesPerSecond, buildings]);
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <div className="w-1/2 flex flex-col items-center justify-center border-r-2 border-gray-300">
+    <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
+      <div className="w-full md:w-1/2 flex flex-col items-center justify-center border-b-2 md:border-r-2 border-gray-300 p-4">
         <Image
           src={CookieImage}
           alt="Cookie"
           width={192}
           height={192}
-          className="w-48 h-48 mb-4 cursor-pointer"
+          className="w-36 h-36 md:w-48 md:h-48 mb-4 cursor-pointer"
           onClick={handleClick}
         />
-        <p className="text-2xl font-bold">Cookie: {Math.floor(count)}</p>
-        <p className="text-xl">Cookies per second: {Math.floor(cookiesPerSecond)}</p>
+        <p className="text-xl md:text-2xl font-bold">Cookie: {Math.floor(count)}</p>
+        <p className="text-lg md:text-xl">Cookies per second: {Math.floor(cookiesPerSecond)}</p>
       </div>
 
-      <div className="w-1/2 p-4 border-l-2 border-gray-300">
+      <div className="w-full md:w-1/2 p-4">
         <div className="flex flex-col items-center">
-          <h2 className="text-2xl font-bold mb-4">Buildings</h2>
+          <h2 className="text-xl md:text-2xl font-bold mb-4">Buildings</h2>
           {buildings.map((building, index) => (
             <Build
               key={index}
