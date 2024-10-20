@@ -16,13 +16,13 @@ export default function Home() {
   const [count, setCount] = useState<number>(0);
   const [cookiesPerSecond, setCookiesPerSecond] = useState<number>(0);
   const [buildings, setBuildings] = useState<Building[]>([
-    { name: 'Cursor', cost: 15, cps: 1, quantity: 0 },
+    { name: 'Cursor', cost: 15, cps: 2, quantity: 0 },
     { name: 'Grandma', cost: 100, cps: 5, quantity: 0 },
     { name: 'Farm', cost: 1100, cps: 15, quantity: 0 },
     { name: 'Mine', cost: 12000, cps: 47, quantity: 0 },
-    { name: 'Factory', cost: 130000, cps: 260, quantity: 0 },
-    { name: 'Bank', cost: 1400000, cps: 1400, quantity: 0 },
-    { name: 'Temple', cost: 20000000, cps: 7800, quantity: 0 },
+    { name: 'Factory', cost: 80000, cps: 260, quantity: 0 },
+    { name: 'Bank', cost: 120000, cps: 1400, quantity: 0 },
+    { name: 'Temple', cost: 200000, cps: 7800, quantity: 0 },
   ]);
 
   useEffect(() => {
