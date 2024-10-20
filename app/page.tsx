@@ -36,7 +36,7 @@ export default function Home() {
           setBuildings(response.data.buildings);
         }
       } catch (error) {
-        console.log("No saved progress found.");
+        console.log("No saved progress found.", error);
       }
     };
     loadProgress();

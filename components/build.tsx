@@ -18,7 +18,7 @@ const getBuildImage = async (buildName: string) => {
   return image.default;
 }
 
-const Build: React.FC<BuildProps> = ({ name, cost, cps, count, quantity, setCount, cookiesPerSecond, setCookiesPerSecond, buyBuilding }) => {
+const Build: React.FC<BuildProps> = ({ name, cost, quantity, buyBuilding }) => {
   const [imageSrc, setImageSrc] = React.useState<string | null>(null);
 
   React.useEffect(() => {
