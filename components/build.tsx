@@ -11,6 +11,7 @@ interface BuildProps {
   cookiesPerSecond: number;
   setCookiesPerSecond: (cps: number) => void;
   buyBuilding: () => void;
+  canBuy: boolean;
 }
 
 const getBuildImage = async (buildName: string) => {
@@ -18,7 +19,7 @@ const getBuildImage = async (buildName: string) => {
   return image.default;
 }
 
-const Build: React.FC<BuildProps> = ({ name, cost, quantity, buyBuilding }) => {
+const Build: React.FC<BuildProps> = ({ name, cost, quantity, buyBuilding, canBuy }) => {
   const [imageSrc, setImageSrc] = React.useState<string | null>(null);
 
   React.useEffect(() => {
@@ -47,8 +48,9 @@ const Build: React.FC<BuildProps> = ({ name, cost, quantity, buyBuilding }) => {
         <p className="text-xs md:text-sm">Owned: {quantity}</p>
       </div>
       <button
-        className="ml-4 px-2 py-1 md:px-4 md:py-2 bg-blue-500 text-white rounded text-xs md:text-base"
-        onClick={buyBuilding}
+        className={`ml-4 px-2 py-1 md:px-4 md:py-2 ${canBuy ? 'bg-blue-500' : 'bg-gray-500'} text-white rounded text-xs md:text-base`}
+        onClick={canBuy ? buyBuilding : undefined}
+        disabled={!canBuy}
       >
         Buy
       </button>

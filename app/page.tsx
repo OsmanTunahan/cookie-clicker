@@ -10,19 +10,20 @@ type Building = {
   cost: number;
   cps: number;
   quantity: number;
+  clickBonus: number;
 };
 
 export default function Home() {
   const [count, setCount] = useState<number>(0);
   const [cookiesPerSecond, setCookiesPerSecond] = useState<number>(0);
   const [buildings, setBuildings] = useState<Building[]>([
-    { name: 'Cursor', cost: 15, cps: 2, quantity: 0 },
-    { name: 'Grandma', cost: 100, cps: 5, quantity: 0 },
-    { name: 'Farm', cost: 1100, cps: 15, quantity: 0 },
-    { name: 'Mine', cost: 12000, cps: 47, quantity: 0 },
-    { name: 'Factory', cost: 80000, cps: 260, quantity: 0 },
-    { name: 'Bank', cost: 120000, cps: 1400, quantity: 0 },
-    { name: 'Temple', cost: 200000, cps: 7800, quantity: 0 },
+    { name: 'Cursor', cost: 15, cps: 1, quantity: 0, clickBonus: 1 },
+    { name: 'Grandma', cost: 100, cps: 5, quantity: 0, clickBonus: 2 },
+    { name: 'Farm', cost: 1100, cps: 15, quantity: 0, clickBonus: 3 },
+    { name: 'Mine', cost: 12000, cps: 47, quantity: 0, clickBonus: 4 },
+    { name: 'Factory', cost: 130000, cps: 260, quantity: 0, clickBonus: 5 },
+    { name: 'Bank', cost: 1400000, cps: 1400, quantity: 0, clickBonus: 6 },
+    { name: 'Temple', cost: 20000000, cps: 7800, quantity: 0, clickBonus: 7 },
   ]);
 
   useEffect(() => {
@@ -50,12 +51,20 @@ export default function Home() {
   }, [cookiesPerSecond]);
 
   const handleClick = () => {
-    setCount((prevCount) => prevCount + 1);
+    const totalClickBonus = buildings.reduce((acc, building) => acc + building.quantity * building.clickBonus, 0);
+    setCount((prevCount) => prevCount + 1 + totalClickBonus);
+  };
+
+  const canBuyBuilding = (index: number) => {
+    const building = buildings[index];
+    if (index === 0) return count >= building.cost;
+    const previousBuilding = buildings[index - 1];
+    return previousBuilding.quantity >= 10 && count >= building.cost;
   };
 
   const buyBuilding = (index: number) => {
     const building = buildings[index];
-    if (count >= building.cost) {
+    if (canBuyBuilding(index)) {
       const newCount = count - building.cost;
       const newBuildings = [...buildings];
       newBuildings[index].quantity += 1;
@@ -121,6 +130,7 @@ export default function Home() {
               cookiesPerSecond={cookiesPerSecond}
               setCookiesPerSecond={setCookiesPerSecond}
               buyBuilding={() => buyBuilding(index)}
+              canBuy={canBuyBuilding(index)}
             />
           ))}
         </div>
